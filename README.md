@@ -63,8 +63,8 @@ To embed the AI agent chat widget into your website, copy and paste the followin
   </div>
 
   <script>
-    // Configure API URL - change this to your deployed backend URL
-    const API_URL = 'http://localhost:8000/generate';
+    // Configure API URL - update this to your deployed Vercel URL
+    const API_URL = 'https://your-project.vercel.app/api/generate';
 
     async function sendMessage() {
       const input = document.getElementById('ai-input');
@@ -101,12 +101,26 @@ To embed the AI agent chat widget into your website, copy and paste the followin
 - Update the `API_URL` in the script to the deployed URL.
 - Ensure CORS is configured to allow requests from your website's domain.
 
-## API Usage
+## Deployment to Vercel
 
-The backend API is available at `http://localhost:8000/generate` with POST requests containing:
-```json
-{
-  "prompt": "Your message",
-  "provider": "g4f"
-}
-```
+1. Install Vercel CLI:
+   ```bash
+   npm install -g vercel
+   ```
+
+2. Login to Vercel:
+   ```bash
+   vercel login
+   ```
+
+3. Deploy the project:
+   ```bash
+   vercel
+   ```
+   Follow the prompts to set up the project.
+
+4. After deployment, note the URL (e.g., `https://your-project.vercel.app`).
+
+5. The chat interface will be available at the root URL, and the API at `/api/generate`.
+
+6. Update the `API_URL` in the embedding code to `https://your-project.vercel.app/api/generate`.
