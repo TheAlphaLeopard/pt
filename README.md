@@ -1,43 +1,21 @@
 # AI Agent Web App
 
-This project provides an embeddable AI agent for websites, using g4f for free AI responses.
+This project provides an embeddable AI agent for websites, using GPT4Free.js for free AI responses directly in the browser.
 
 ## Features
 
 - Web-based chat interface
 - Embeds easily into any website
-- Uses free AI models via g4f
-- CORS enabled for cross-origin access
+- Uses free AI models via GPT4Free.js
+- No backend required - runs entirely client-side
 
-## Installation
+## Local Development
 
-1. Install Python dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-2. Install Node.js dependencies:
-   ```bash
-   npm install
-   ```
-
-## Running the Project
-
-1. Start the Python AI API backend:
-   ```bash
-   python main.py
-   ```
-
-2. Start the Node.js web app:
-   ```bash
-   npm start
-   ```
-
-3. Visit `http://localhost:3000` to use the AI agent chat interface.
+Simply open `public/index.html` in your browser to test the chat interface locally.
 
 ## Embedding in Your Website
 
-To embed the AI agent chat widget into your website, copy and paste the following HTML code into your webpage. For local development, ensure your website is served from the same origin as the backend (e.g., both on localhost). For production, update the `API_URL` to your deployed backend URL.
+To embed the AI agent chat widget into your website, copy and paste the following HTML code into your webpage. The AI runs directly in the browser using GPT4Free.js, so no backend is required.
 
 ```html
 <!DOCTYPE html>
@@ -62,11 +40,12 @@ To embed the AI agent chat widget into your website, copy and paste the followin
     <button id="ai-send" onclick="sendMessage()">Send</button>
   </div>
 
-  <script>
-    // Configure API URL - update this to your deployed Vercel URL
-    const API_URL = 'https://your-project.vercel.app/api/generate';
+  <script type="module">
+    import Client from 'https://g4f.dev/dist/js/client.js';
 
-    async function sendMessage() {
+    const client = new Client();
+
+    window.sendMessage = async function() {
       const input = document.getElementById('ai-input');
       const chat = document.getElementById('ai-chat');
       const prompt = input.value;
@@ -74,32 +53,25 @@ To embed the AI agent chat widget into your website, copy and paste the followin
       chat.innerHTML += '<p><strong>You:</strong> ' + prompt + '</p>';
       input.value = '';
       try {
-        const response = await fetch(API_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ prompt, provider: 'g4f' })
+        const result = await client.chat.completions.create({
+          model: 'gpt-4o-mini',
+          messages: [{ role: 'user', content: prompt }]
         });
-        const data = await response.json();
-        chat.innerHTML += '<p><strong>AI:</strong> ' + (data.response || data.error) + '</p>';
+        chat.innerHTML += '<p><strong>AI:</strong> ' + result.choices[0].message.content + '</p>';
       } catch (error) {
         chat.innerHTML += '<p><strong>Error:</strong> ' + error.message + '</p>';
       }
       chat.scrollTop = chat.scrollHeight;
-    }
+    };
   </script>
 </body>
 </html>
 ```
 
-### Notes for Local Embedding
-- If your website is hosted remotely, the fetch to `localhost:8000` will fail due to CORS and security policies.
-- For local testing, serve your website from a local server (e.g., using `python -m http.server` or similar) on a different port.
-- The backend must be running on `localhost:8000` for the widget to work locally.
-
-### For Production Deployment
-- Deploy the Python backend to a cloud service (e.g., Vercel, Heroku).
-- Update the `API_URL` in the script to the deployed URL.
-- Ensure CORS is configured to allow requests from your website's domain.
+### Features
+- **Agentic AI**: The AI can respond conversationally and perform tasks directly in the browser.
+- **No Backend Required**: Everything runs client-side, making it easy to embed.
+- **Free and Open**: Uses GPT4Free.js for free AI access.
 
 ## Deployment to Vercel
 
@@ -119,8 +91,4 @@ To embed the AI agent chat widget into your website, copy and paste the followin
    ```
    Follow the prompts to set up the project.
 
-4. After deployment, note the URL (e.g., `https://your-project.vercel.app`).
-
-5. The chat interface will be available at the root URL, and the API at `/api/generate`.
-
-6. Update the `API_URL` in the embedding code to `https://your-project.vercel.app/api/generate`.
+4. After deployment, the chat interface will be available at the URL (e.g., `https://agentig.vercel.app`).

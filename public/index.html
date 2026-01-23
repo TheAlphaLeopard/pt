@@ -14,11 +14,12 @@
   <div id="chat"></div>
   <input id="input" type="text" placeholder="Type your message">
   <button onclick="sendMessage()">Send</button>
-  <script>
-    // Configure API URL - change this to your deployed backend URL
-    const API_URL = '/api/generate';
+  <script type="module">
+    import Client from 'https://g4f.dev/dist/js/client.js';
 
-    async function sendMessage() {
+    const client = new Client();
+
+    window.sendMessage = async function() {
       const input = document.getElementById('input');
       const chat = document.getElementById('chat');
       const prompt = input.value;
@@ -26,18 +27,16 @@
       chat.innerHTML += '<p><strong>You:</strong> ' + prompt + '</p>';
       input.value = '';
       try {
-        const response = await fetch(API_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ prompt, provider: 'g4f' })
+        const result = await client.chat.completions.create({
+          model: 'gpt-4o-mini',
+          messages: [{ role: 'user', content: prompt }]
         });
-        const data = await response.json();
-        chat.innerHTML += '<p><strong>AI:</strong> ' + (data.response || data.error) + '</p>';
+        chat.innerHTML += '<p><strong>AI:</strong> ' + result.choices[0].message.content + '</p>';
       } catch (error) {
         chat.innerHTML += '<p><strong>Error:</strong> ' + error.message + '</p>';
       }
       chat.scrollTop = chat.scrollHeight;
-    }
+    };
   </script>
 </body>
 </html>

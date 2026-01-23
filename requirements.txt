@@ -1,4 +1,0 @@
-fastapi
-uvicorn
-g4f
-vercel-llm-api
