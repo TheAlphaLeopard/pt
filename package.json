@@ -1,0 +1,13 @@
+{
+  "name": "ai-agent-web",
+  "version": "1.0.0",
+  "description": "An embeddable AI agent web app using g4f for free AI responses",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5"
+  }
+}
